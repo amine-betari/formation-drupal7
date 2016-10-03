@@ -1,0 +1,32 @@
+<?php
+
+
+
+/**
+ * Implementation hook_page_alter()
+ */
+function formation_page_alter($page) 
+{
+}
+
+/**
+ * Implementation hook_help()
+ */
+function formation_help($path, $arg)
+{
+	switch ($path) {
+		case 'admin/help#formation':
+			$output = '<h3>A propos du module : Formation</h3>';
+			$output .= "<p>Exemple de module</p>";
+			return $output;		
+	}
+}
+
+/**
+ * Implementation hook_block_info()
+ */
+function formation_block_info()
+{
+}
+
+

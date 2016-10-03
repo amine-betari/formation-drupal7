@@ -1,0 +1,11 @@
+name = formation
+description = Bonne pratique de mon module de formation
+package = Formation
+core = 7.x
+dependencies[] = user
+;dependencies[] = trigger
+dependencies[] = rules
+dependencies[] = rules_admin
+; files[] = formation.test
+; configure  = 
+version = "7.x-1.0"

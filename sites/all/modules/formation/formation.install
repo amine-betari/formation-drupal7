@@ -1,0 +1,126 @@
+<?php
+
+require_once('formation.functions.inc');
+
+function _recette_options_list() 
+{
+	$options = array(
+				1 => 'Option A',
+				2 => 'Option 2',
+				3 => 'Option C',
+				4 => 'Option 4',
+				5 => 'Option E',
+				6 => 'Option 6',
+			);
+	return $options;
+}
+
+
+/**
+ * Implementation of hook_disable().
+ */
+function formation_disable()
+{
+  $instance = array(
+    'field_name' => 'recette_list',
+    'entity_type' => 'node',
+    'bundle' => 'recette',
+  );
+  field_delete_instance($instance);
+  field_delete_field($instance['field_name']);
+  print 'Removed ' . $instance['field_name'] . "\n";
+}
+
+
+/**
+ * Implementation of hook_enable().
+ */
+function formation_enable()
+{
+	// On créer le champ
+	if (!field_info_field('url')) {
+		$field = array(
+			'field_name' => 'url', 
+			'type' => 'text', 
+		);
+		field_create_field($field);
+
+		// Create the instance on the bundle.
+		$instance = array(
+			'field_name' => 'url', 
+			'entity_type' => 'user', 
+			'label' => 'URL SITE', 
+			'bundle' => 'user', 
+			// If you don't set the "required" property then the field wont be required by default.
+			'required' => TRUE,
+			'settings' => array(
+			   // Here you inform either or not you want this field showing up on the registration form.
+				'user_register_form' => 1,
+			),
+			'widget' => array(
+				'type' => 'textfield',
+			), 
+		);
+		field_create_instance($instance);
+	}
+	
+	if (!field_info_field('recette_list')) {
+		$field = array(
+			'field_name' => 'recette_list', 
+			'label' => t('Select an option from the list'),
+			'type' => 'list_integer', 
+			'cardinality' => 1,
+			'foreign keys' => array(),
+			'indexes' => array(
+			  'value' => array(
+				0 => 'value',
+			  ),
+			),
+			'module' => 'list',
+			'settings' => array(
+			   // Here you inform either or not you want this field showing up on the registration form.
+				'allowed_values_function' => '_recette_options_list',
+			)
+		);
+		field_create_field($field);
+		// Create the instance on the bundle.
+		$instance = array(
+			'field_name' => 'recette_list', 
+			'label' => t('You Selected'),
+			'description' => t('Select an option from the list.'),
+			'entity_type' => 'node', 
+			'bundle' => 'recette', 
+			'label' => t('Select an option from the list'), 
+			'default_value' => null,
+			// If you don't set the "required" property then the field wont be required by default.
+			'display' => array(
+			  'default' => array(
+				'label' => 'above',
+				'module' => 'list',
+				'settings' => array(),
+				'type' => 'list_default',
+				'weight' => -1,
+			  ),
+			  'teaser' => array(
+				'label' => 'above',
+				'settings' => array(),
+				'type' => 'hidden',
+				'weight' => -1,
+			  ),
+			),
+			'required' => 1,
+			'settings' => array(
+			  'user_register_form' => FALSE,
+			),
+			'widget' => array(
+			  'active' => 1,
+			  'module' => 'options',
+			  'settings' => array(),
+			  'type' => 'options_select',
+			  'weight' => '-1',
+			),
+		);
+		field_create_instance($instance);
+	}
+}
+
